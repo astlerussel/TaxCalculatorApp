@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>QUnit Ajax example</title>
+        <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-1.22.0.css">
+    </head>
+    <body>
+        <div id="qunit"></div>
+        <div id="qunit-fixture"></div>
+        <script src="//code.jquery.com/qunit/qunit-1.22.0.js"></script>
+        <script src="https://code.jquery.com/jquery-1.12.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mockjax/1.6.2/jquery.mockjax.js"></script>
+        <script>
+            
+            
+            QUnit.test( "test of new firebase url", function( assert ) {
+                assert.expect( 2 );
+                var done = assert.async();
+                var done2 = assert.async();
+                jQuery.ajax({
+                    url: "https://dazzling-heat-1553.firebaseio.com/tests.json"
+                }).done(function(data){
+                    assert.ok(data != null, JSON.stringify(data));
+                    done();
+                }).fail(function(err){
+                    assert.ok( false, JSON.stringify(err) );
+                    done();
+                });
+                jQuery.ajax({
+                    url: "https://dazzling-heat-1553.firebaseio.com/tests2.json"
+                }).done(function(data){
+                    assert.ok(data != null, JSON.stringify(data));
+                    done2();
+                }).fail(function(err){
+                    assert.ok( false, JSON.stringify(err) );
+                    done2();
+                });
+            });
+        </script>
+    </body>
+</html>

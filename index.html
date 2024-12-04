@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tax Calculator</title>
+  <link rel="stylesheet" href="css/main.css">
+  <script src="js/IncomeTax.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Ontario & Federal Tax Calculator</h1>
+    <form id="tax-form">
+      <label for="income">Enter Taxable Income:</label>
+      <input type="number" id="income" required>
+
+      <label for="taxPaid">Enter Tax Deducted:</label>
+      <input type="number" id="taxPaid" required>
+
+      <button type="button" id="calculate">Calculate</button>
+    </form>
+
+    <div id="results">
+      <h2>Results</h2>
+      <p>Federal Tax: <span id="federalTax">$0.00</span></p>
+      <p>Ontario Tax: <span id="ontarioTax">$0.00</span></p>
+      <p>Total Tax: <span id="totalTax">$0.00</span></p>
+      <p>Tax Owing(refund): <span id="taxOwed">$0.00</span></p>
+    </div>
+  </div>
+  <script>
+  document.getElementById("tax-form").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      if (e.target.id === "income") {
+        document.getElementById("taxPaid").focus();
+      } else if (e.target.id === "taxPaid") {
+        document.getElementById("calculate").click();
+      }
+      e.preventDefault();
+    }
+  });
+  
+  document.getElementById("calculate").addEventListener("click", () => {
+    const income = parseFloat(document.getElementById("income").value);
+    const taxPaid = parseFloat(document.getElementById("taxPaid").value);
+  
+    if (isNaN(income) || isNaN(taxPaid) || income < 0 || taxPaid < 0) {
+      alert("Please enter valid non-negative numbers for income and tax paid.");
+      return;
+    }
+  
+    try {
+      // Federal tax calculations
+      const federalTax = IncomeTax.calculateFederalTax(income);
+  
+      // Ontario tax calculations
+      const ontarioTax = IncomeTax.calculateOntarioTax(income);
+  
+      // Total tax and tax owed
+      const totalTax = federalTax + ontarioTax;
+      const taxOwed = totalTax - taxPaid;
+  
+      // Update the UI
+      document.getElementById("federalTax").textContent = `$${federalTax.toFixed(
+        2
+      )}`;
+      document.getElementById("ontarioTax").textContent = `$${ontarioTax.toFixed(
+        2
+      )}`;
+      document.getElementById("totalTax").textContent = `$${totalTax.toFixed(2)}`;
+      document.getElementById("taxOwed").textContent = `$${taxOwed.toFixed(2)}`;
+    } catch (err) {
+      alert(err.message);
+    }
+  });
+
+  </script>
+</body>
+</html>

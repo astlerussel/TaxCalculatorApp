@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>QUnit mockjax example</title>
+        <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-1.22.0.css">
+    </head>
+    <body>
+        <div id="qunit"></div>
+        <div id="qunit-fixture"></div>
+        <script src="//code.jquery.com/qunit/qunit-1.22.0.js"></script>
+        <script src="https://code.jquery.com/jquery-1.12.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mockjax/1.6.2/jquery.mockjax.js"></script>
+        <script>
+            jQuery.mockjax({
+              url: "/restful/fortune",
+              responseText: {
+                status: "success",
+                fortune: "Are you a mock turtle?"
+              }
+            });
+            
+            
+            QUnit.test( "test of mockjax url", function( assert ) {
+                assert.expect( 1 );
+                var done = assert.async();
+                jQuery.ajax({
+                    url: "/restful/fortune"
+                }).done(function(data){
+                    assert.ok(data != null, JSON.stringify(data));
+                    done();
+                }).fail(function(err){
+                    assert.ok( false, JSON.stringify(err) );
+                    done();
+                });
+            });
+        </script>
+    </body>
+</html>

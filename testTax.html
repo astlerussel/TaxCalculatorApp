@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Income Tax Tests</title>
+  <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.19.4.css">
+  <script src="https://code.jquery.com/qunit/qunit-2.19.4.js"></script>
+  <script src="js/IncomeTax.js"></script>
+</head>
+<body>
+  <h1>Income Tax Tests</h1>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+
+  <script>
+    QUnit.module("Federal Tax Tests");
+
+    QUnit.test("Federal Tax: Income under $44,701", (assert) => {
+      const income = 44000;
+      const expected = income * 0.15;
+      assert.strictEqual(IncomeTax.calculateFederalTax(income), expected, "15% tax applied correctly.");
+    });
+
+    QUnit.test("Federal Tax: Income between $44,701 and $89,401", (assert) => {
+      const income = 60000;
+      const expected = (44701 * 0.15) + ((60000 - 44701) * 0.22);
+      assert.strictEqual(IncomeTax.calculateFederalTax(income), expected, "15% and 22% brackets calculated correctly.");
+    });
+
+    QUnit.test("Federal Tax: Income between $89,401 and $138,586", (assert) => {
+      const income = 120000;
+      const expected = (44701 * 0.15) + ((89401 - 44701) * 0.22) + ((120000 - 89401) * 0.26);
+      assert.strictEqual(IncomeTax.calculateFederalTax(income), expected, "15%, 22%, and 26% brackets calculated correctly.");
+    });
+
+    QUnit.test("Federal Tax: Income above $138,586", (assert) => {
+      const income = 200000;
+      const expected = (44701 * 0.15) + ((89401 - 44701) * 0.22) + ((138586 - 89401) * 0.26) + ((200000 - 138586) * 0.29);
+      assert.strictEqual(IncomeTax.calculateFederalTax(income), expected, "All brackets including 29% calculated correctly.");
+    });
+
+    QUnit.test("Federal Tax: Invalid input", (assert) => {
+      const income = -1000;
+      assert.throws(() => IncomeTax.calculateFederalTax(income), /Invalid income/, "Throws error for negative income.");
+    });
+
+    QUnit.module("Ontario Tax Tests");
+
+    QUnit.test("Ontario Tax: Income under $49,231", (assert) => {
+      const income = 40000;
+      const expected = income * 0.0505;
+      assert.strictEqual(IncomeTax.calculateOntarioTax(income), expected, "5.05% tax applied correctly.");
+    });
+
+    QUnit.test("Ontario Tax: Income between $49,231 and $98,463", (assert) => {
+      const income = 60000;
+      const expected = (49231 * 0.0505) + ((60000 - 49231) * 0.0915);
+      assert.strictEqual(IncomeTax.calculateOntarioTax(income), expected, "5.05% and 9.15% brackets calculated correctly.");
+    });
+
+    QUnit.test("Ontario Tax: Income between $98,463 and $150,000", (assert) => {
+      const income = 120000;
+      const expected = (49231 * 0.0505) + ((98463 - 49231) * 0.0915) + ((120000 - 98463) * 0.1116);
+      assert.strictEqual(IncomeTax.calculateOntarioTax(income), expected, "5.05%, 9.15%, and 11.16% brackets calculated correctly.");
+    });
+
+    QUnit.test("Ontario Tax: Income between $150,000 and $220,000", (assert) => {
+      const income = 200000;
+      const expected = (49231 * 0.0505) + ((98463 - 49231) * 0.0915) + ((150000 - 98463) * 0.1116) + ((200000 - 150000) * 0.1216);
+      assert.strictEqual(IncomeTax.calculateOntarioTax(income), expected, "All brackets including 12.16% calculated correctly.");
+    });
+
+    QUnit.test("Ontario Tax: Income above $220,000", (assert) => {
+      const income = 250000;
+      const expected = (49231 * 0.0505) + ((98463 - 49231) * 0.0915) + ((150000 - 98463) * 0.1116) + ((220000 - 150000) * 0.1216) + ((250000 - 220000) * 0.1316);
+      assert.strictEqual(IncomeTax.calculateOntarioTax(income), expected, "All brackets including 13.16% calculated correctly.");
+    });
+
+    QUnit.test("Ontario Tax: Invalid input", (assert) => {
+      const income = -5000;
+      assert.throws(() => IncomeTax.calculateOntarioTax(income), /Invalid income/, "Throws error for negative income.");
+    });
+  </script>
+</body>
+</html>
